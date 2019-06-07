@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZNET_GUI"
         mc:Ignorable="d"
-        Title="Z-NET-TOOL" Height="370" Width="803" FontFamily="Consolas" FontWeight="Bold" FontSize="20" ResizeMode="NoResize" Foreground="#FF055C99" OpacityMask="#FF055C99" BorderBrush="#FF055C99">
+        Title="Z-NET-TOOL" Height="385" Width="813" FontFamily="Consolas" FontWeight="Bold" FontSize="20" ResizeMode="NoResize" Foreground="#FF055C99" OpacityMask="#FF055C99" BorderBrush="#FF055C99">
     <Window.Resources>
         <Color x:Key="ColorNormal">#FF0D023E</Color>
         <Color x:Key="ColorTableLabal">#FF0D023E</Color>
@@ -21,186 +21,73 @@
             <GradientStop Color="#FF0D023E" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Grid HorizontalAlignment="Left" Height="315" VerticalAlignment="Top" Width="793" Margin="0,0,0,-3">
-        <TabControl x:Name="MainTable" HorizontalAlignment="Left" Width="793" Margin="0,0,0,-10">
+    <Grid HorizontalAlignment="Left" Height="340" VerticalAlignment="Top" Width="793" Margin="10,10,0,0">
+        <TabControl x:Name="MainTable" HorizontalAlignment="Left" Width="783">
             <TabControl.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
                     <GradientStop Color="#FF0D023E" Offset="1"/>
                 </LinearGradientBrush>
             </TabControl.Background>
-            <TabItem Header="ARP">
-                <Grid Margin="0,5,-2,-14" HorizontalAlignment="Right" Width="785" Height="295" VerticalAlignment="Top">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="Black" Offset="0"/>
-                            <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0*"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="GotoETH" Content="Send this packet to ETH layer..." HorizontalAlignment="Left" Margin="10,245,0,10" Width="772" Grid.ColumnSpan="2" Click="GotoETH_Click" Focusable="False">
+            <TabItem Header="Config">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <TabItem.Foreground>
+                    <SolidColorBrush Color="{DynamicResource RED}"/>
+                </TabItem.Foreground>
+                <Grid HorizontalAlignment="Left" Height="310" Margin="0,-5,-7,-4" VerticalAlignment="Top" Width="780">
+                    <Button x:Name="BeginSelectInf" Content="Begin to select" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Width="225" Height="39" Click="BeginSelectInf_Click" Focusable="False">
                         <Button.Foreground>
-                            <SolidColorBrush Color="#FF08F908"/>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
                         </Button.Foreground>
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FF040404" Offset="0"/>
-                                <GradientStop Color="#FF060606"/>
-                                <GradientStop Color="#FF040404"/>
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Black"/>
+                                <GradientStop Color="Black"/>
                                 <GradientStop Color="#FF0D023E" Offset="1"/>
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <TextBox x:Name="ArpPacketBytesShow" HorizontalAlignment="Left" Height="59" Margin="10,183,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5">
-                        <TextBox.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color2}"/>
-                        </TextBox.Foreground>
-                        <TextBox.Background>
+                    <Label x:Name="Config_Message" Content="Once selected the Interface,We will fill the real MAC and IP for you" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Width="760">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="0"/>
                                 <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
                             </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                    <Label Content="SenderMAC" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="203" Height="40" Grid.ColumnSpan="2">
-                        <Label.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Golden}"/>
-                        </Label.BorderBrush>
-                        <Label.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Green}"/>
-                        </Label.Foreground>
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="#FF0D023E" Offset="1"/>
-                            </LinearGradientBrush>
                         </Label.Background>
                     </Label>
-                    <Label Content="SenderIP" HorizontalAlignment="Left" Margin="220,51,0,0" VerticalAlignment="Top" Width="175" Height="40" Grid.ColumnSpan="2">
-                        <Label.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Golden}"/>
-                        </Label.BorderBrush>
-                        <Label.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Green}"/>
-                        </Label.Foreground>
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
+                    <ComboBox x:Name="ConfigComBox" HorizontalAlignment="Left" Margin="240,47,0,0" VerticalAlignment="Top" Width="530" Height="39" SelectionChanged="ConfigComBox_SelectionChanged">
+                        <ComboBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource RED}"/>
+                        </ComboBox.Foreground>
+                        <ComboBox.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Black"/>
+                                <GradientStop Color="Black"/>
                                 <GradientStop Color="#FF0D023E" Offset="1"/>
                             </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
-                    <Label Content="TargetMAC" HorizontalAlignment="Left" Margin="402,52,0,0" VerticalAlignment="Top" Width="201" Height="40" Grid.ColumnSpan="2">
-                        <Label.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Golden}"/>
-                        </Label.BorderBrush>
-                        <Label.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Green}"/>
-                        </Label.Foreground>
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="#FF0D023E" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
-                    <Label Content="TargetIP" HorizontalAlignment="Left" Margin="609,52,0,0" VerticalAlignment="Top" Width="176" Height="40" Grid.ColumnSpan="2">
-                        <Label.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Golden}"/>
-                        </Label.BorderBrush>
-                        <Label.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Green}"/>
-                        </Label.Foreground>
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="#FF0D023E" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
-                    <Button x:Name="ARP_GenRep" Content="Gen Req Packet" HorizontalAlignment="Left" Margin="402,138,0,0" VerticalAlignment="Top" Width="380" Height="40" Grid.ColumnSpan="2" Click="ARP_GenRep_Click" Focusable="False">
+                        </ComboBox.Background>
+                    </ComboBox>
+                    <Button x:Name="SetLocalIPMAC" Content="Set local IP and MAC to other table..." HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="760" Height="39" Click="SetLocalIPMAC_Click" Focusable="False">
                         <Button.Foreground>
                             <SolidColorBrush Color="{DynamicResource Green}"/>
                         </Button.Foreground>
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FF040404" Offset="0"/>
-                                <GradientStop Color="#FF060606"/>
-                                <GradientStop Color="#FF040404"/>
-                                <GradientStop Color="#FF0D023E" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Button.Background>
-                    </Button>
-                    <TextBox x:Name="SenderMAC" HorizontalAlignment="Left" Height="32" Margin="10,98,0,0" TextWrapping="Wrap" Text="11-11-11-11-11-11" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
-                        <TextBox.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color2}"/>
-                        </TextBox.Foreground>
-                        <TextBox.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                    <TextBox x:Name="SenderIP" HorizontalAlignment="Left" Height="32" Margin="218,98,0,0" TextWrapping="Wrap" Text="192.168.1.120" VerticalAlignment="Top" Width="177" Grid.ColumnSpan="2">
-                        <TextBox.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color2}"/>
-                        </TextBox.Foreground>
-                        <TextBox.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                    <TextBox x:Name="TargetMAC" HorizontalAlignment="Left" Height="32" Margin="400,98,0,0" TextWrapping="Wrap" Text="00-00-00-00-00-00" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
-                        <TextBox.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color2}"/>
-                        </TextBox.Foreground>
-                        <TextBox.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                    <TextBox x:Name="TargetIP" HorizontalAlignment="Left" Height="32" Margin="608,98,0,0" TextWrapping="Wrap" Text="192.168.1.109" VerticalAlignment="Top" Width="177" Grid.ColumnSpan="2">
-                        <TextBox.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Color2}"/>
-                        </TextBox.Foreground>
-                        <TextBox.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                    <Label Content="Input the information as follow,This exe will genarate the Arp packet" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="775" Height="40" Grid.ColumnSpan="2">
-                        <Label.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource Golden}"/>
-                        </Label.BorderBrush>
-                        <Label.Foreground>
-                            <SolidColorBrush Color="#FF7A775F"/>
-                        </Label.Foreground>
-                        <Label.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="#FF0D023E" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Label.Background>
-                    </Label>
-                    <Button x:Name="ARP_GenReq" Content="Gen Req Packet" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top" Width="380" Height="40" Grid.ColumnSpan="2" Focusable="False" Click="ARP_GenReq_Click">
-                        <Button.Foreground>
-                            <SolidColorBrush Color="{DynamicResource Green}"/>
-                        </Button.Foreground>
-                        <Button.Background>
-                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                <GradientStop Color="#FF040404" Offset="0"/>
-                                <GradientStop Color="#FF060606"/>
-                                <GradientStop Color="#FF040404"/>
+                                <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                <GradientStop Color="Black"/>
+                                <GradientStop Color="Black"/>
                                 <GradientStop Color="#FF0D023E" Offset="1"/>
                             </LinearGradientBrush>
                         </Button.Background>
@@ -208,6 +95,17 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="Table_ETH" Header="ETH">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <TabItem.Foreground>
+                    <SolidColorBrush Color="{DynamicResource RED}"/>
+                </TabItem.Foreground>
                 <Grid>
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -361,7 +259,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="ETH_Gen_Copy" Content="goto Sender" HorizontalAlignment="Left" Margin="575,239,0,0" VerticalAlignment="Top" Width="198" Height="40" Focusable="False" Click="ETH_Gen_Click">
+                    <Button x:Name="ETH_GotoSender" Content="goto Sender" HorizontalAlignment="Left" Margin="575,239,0,0" VerticalAlignment="Top" Width="198" Height="40" Focusable="False" Click="ETH_GotoSender_Click">
                         <Button.Foreground>
                             <SolidColorBrush Color="{DynamicResource Green}"/>
                         </Button.Foreground>
@@ -415,6 +313,189 @@
                     </ComboBox>
                 </Grid>
             </TabItem>
+            <TabItem Header="ARP">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <TabItem.Foreground>
+                    <SolidColorBrush Color="{DynamicResource RED}"/>
+                </TabItem.Foreground>
+                <Grid Margin="0,5,-2,-14" HorizontalAlignment="Right" Width="785" Height="295" VerticalAlignment="Top">
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Black" Offset="0"/>
+                            <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="GotoETH" Content="Send this packet to ETH layer..." HorizontalAlignment="Left" Margin="10,245,0,10" Width="772" Grid.ColumnSpan="2" Click="GotoETH_Click" Focusable="False" Foreground="#FF08F908">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FF040404" Offset="0"/>
+                                <GradientStop Color="#FF060606"/>
+                                <GradientStop Color="#FF040404"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <TextBox x:Name="ArpPacketBytesShow" HorizontalAlignment="Left" Height="59" Margin="10,183,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="772" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5">
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color2}"/>
+                        </TextBox.Foreground>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="SenderMAC" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="203" Height="40" Grid.ColumnSpan="2">
+                        <Label.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource Golden}"/>
+                        </Label.BorderBrush>
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Label Content="SenderIP" HorizontalAlignment="Left" Margin="220,51,0,0" VerticalAlignment="Top" Width="175" Height="40" Grid.ColumnSpan="2">
+                        <Label.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource Golden}"/>
+                        </Label.BorderBrush>
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Label Content="TargetMAC" HorizontalAlignment="Left" Margin="402,52,0,0" VerticalAlignment="Top" Width="201" Height="40" Grid.ColumnSpan="2">
+                        <Label.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource Golden}"/>
+                        </Label.BorderBrush>
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Label Content="TargetIP" HorizontalAlignment="Left" Margin="609,52,0,0" VerticalAlignment="Top" Width="176" Height="40" Grid.ColumnSpan="2">
+                        <Label.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource Golden}"/>
+                        </Label.BorderBrush>
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Button x:Name="ARP_GenRep" Content="Gen Rep Packet" HorizontalAlignment="Left" Margin="402,138,0,0" VerticalAlignment="Top" Width="380" Height="40" Grid.ColumnSpan="2" Click="ARP_GenRep_Click" Focusable="False">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Button.Foreground>
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FF040404" Offset="0"/>
+                                <GradientStop Color="#FF060606"/>
+                                <GradientStop Color="#FF040404"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <TextBox x:Name="SenderMAC" HorizontalAlignment="Left" Height="32" Margin="10,98,0,0" TextWrapping="Wrap" Text="11-11-11-11-11-11" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color2}"/>
+                        </TextBox.Foreground>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <TextBox x:Name="SenderIP" HorizontalAlignment="Left" Height="32" Margin="218,98,0,0" TextWrapping="Wrap" Text="192.168.1.120" VerticalAlignment="Top" Width="177" Grid.ColumnSpan="2">
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color2}"/>
+                        </TextBox.Foreground>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <TextBox x:Name="TargetMAC" HorizontalAlignment="Left" Height="32" Margin="400,98,0,0" TextWrapping="Wrap" Text="00-00-00-00-00-00" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color2}"/>
+                        </TextBox.Foreground>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <TextBox x:Name="TargetIP" HorizontalAlignment="Left" Height="32" Margin="608,98,0,0" TextWrapping="Wrap" Text="192.168.1.109" VerticalAlignment="Top" Width="177" Grid.ColumnSpan="2">
+                        <TextBox.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Color2}"/>
+                        </TextBox.Foreground>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="Input the information as follow,This exe will genarate the Arp packet" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="775" Height="40" Grid.ColumnSpan="2" Foreground="#FF7A775F">
+                        <Label.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource Golden}"/>
+                        </Label.BorderBrush>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <Button x:Name="ARP_GenReq" Content="Gen Req Packet" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top" Width="380" Height="40" Grid.ColumnSpan="2" Focusable="False" Click="ARP_GenReq_Click">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Button.Foreground>
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                <GradientStop Color="#FF040404" Offset="0"/>
+                                <GradientStop Color="#FF060606"/>
+                                <GradientStop Color="#FF040404"/>
+                                <GradientStop Color="#FF0D023E" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                </Grid>
+            </TabItem>
             <TabItem Header="Sender">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -427,7 +508,148 @@
                 <TabItem.Foreground>
                     <SolidColorBrush Color="{DynamicResource RED}"/>
                 </TabItem.Foreground>
+                <Grid HorizontalAlignment="Left" Height="305" VerticalAlignment="Top" Width="776" Margin="0,0,-3,-4">
+                    <GroupBox Header="Send..." HorizontalAlignment="Left" Height="256" Margin="10,39,0,0" VerticalAlignment="Top" Width="160">
+                        <Grid HorizontalAlignment="Left" Height="227" VerticalAlignment="Top" Width="150" Margin="0,0,-2,-1">
+                            <Button Content="SEND OUT!!" HorizontalAlignment="Left" Height="49" Margin="10,168,0,0" VerticalAlignment="Top" Width="130" Focusable="False">
+                                <Button.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </Button.Foreground>
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="#FFFF0404" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                            <CheckBox x:Name="CHK_FromFile" Content="From File" HorizontalAlignment="Left" Height="35" Margin="10,128,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromFile_Checked">
+                                <CheckBox.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </CheckBox.Foreground>
+                                <CheckBox.Background>
+                                    <SolidColorBrush Color="{DynamicResource ColorNormal}"/>
+                                </CheckBox.Background>
+                            </CheckBox>
+                            <CheckBox x:Name="CHK_FromText" Content="From Text" HorizontalAlignment="Left" Height="35" Margin="10,93,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromText_Checked">
+                                <CheckBox.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </CheckBox.Foreground>
+                                <CheckBox.Background>
+                                    <SolidColorBrush Color="{DynamicResource ColorNormal}"/>
+                                </CheckBox.Background>
+                            </CheckBox>
+                            <Label Content="ms" HorizontalAlignment="Left" Margin="106,48,0,0" VerticalAlignment="Top" Width="34" Height="35">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </Label.Foreground>
+                                <Label.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Label.Background>
+                            </Label>
+                            <TextBox HorizontalAlignment="Left" Height="33" Margin="11,50,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="90">
+                                <TextBox.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </TextBox.Foreground>
+                                <TextBox.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </TextBox.Background>
+                            </TextBox>
+                            <CheckBox Content="Timing" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="129">
+                                <CheckBox.Foreground>
+                                    <SolidColorBrush Color="#FF08F908"/>
+                                </CheckBox.Foreground>
+                                <CheckBox.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </CheckBox.Background>
+                            </CheckBox>
+                        </Grid>
+                    </GroupBox>
+                    <Label Content="Data came from file or the following TextBox" HorizontalAlignment="Left" Height="39" Margin="10,6,0,0" VerticalAlignment="Top" Width="756">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource Green}"/>
+                        </Label.Foreground>
+                        <Label.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Label.Background>
+                    </Label>
+                    <GroupBox Header="File..." HorizontalAlignment="Left" Height="79" Margin="191,216,0,0" VerticalAlignment="Top" Width="575">
+                        <Grid HorizontalAlignment="Left" Height="55" Margin="0,-5,-2,-1" VerticalAlignment="Top" Width="565">
+                            <Label Content="Open pcap file here..." HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" VerticalAlignment="Top" Width="268">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </Label.Foreground>
+                                <Label.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Label.Background>
+                            </Label>
+                            <Button Content="Open file..." HorizontalAlignment="Left" Height="35" Margin="278,10,0,0" VerticalAlignment="Top" Width="150">
+                                <Button.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Green}"/>
+                                </Button.Foreground>
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="#FF292B03" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                            <Label Content="File OK!!" HorizontalAlignment="Left" Height="35" Margin="453,11,0,0" VerticalAlignment="Top" Width="112">
+                                <Label.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </Label.Foreground>
+                                <Label.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0"/>
+                                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Label.Background>
+                            </Label>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Data..." HorizontalAlignment="Left" Height="172" Margin="191,39,0,0" VerticalAlignment="Top" Width="575">
+                        <GroupBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </GroupBox.Background>
+                        <TextBox x:Name="SenderDataShow" HorizontalAlignment="Left" Height="142" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="565" Margin="0,0,-2,0">
+                            <TextBox.CaretBrush>
+                                <SolidColorBrush Color="{DynamicResource Golden}"/>
+                            </TextBox.CaretBrush>
+                            <TextBox.Foreground>
+                                <SolidColorBrush Color="{DynamicResource Green}"/>
+                            </TextBox.Foreground>
+                            <TextBox.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black" Offset="0"/>
+                                    <GradientStop Color="#FF0D023E" Offset="1"/>
+                                </LinearGradientBrush>
+                            </TextBox.Background>
+                        </TextBox>
+                    </GroupBox>
+                </Grid>
             </TabItem>
         </TabControl>
+
     </Grid>
 </Window>

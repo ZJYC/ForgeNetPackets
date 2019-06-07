@@ -18,6 +18,10 @@ using PacketDotNet.Utils;
 using SharpPcap.LibPcap;
 using SharpPcap;
 using System.IO;
+using System.Net.Sockets;
+using System.Threading;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace ZNET_GUI
 {
@@ -34,6 +38,11 @@ namespace ZNET_GUI
         GeneratePackets GenPackets = new GeneratePackets();
         Basic basic = new Basic();
         private string LastPcapFilePath = "c:\\";
+        private LibPcapLiveDeviceList Devices;
+        private LibPcapLiveDevice Device;
+
+        private IPAddress DeviceAddress;
+        private PhysicalAddress DeviceMAC;
 
         private int GetTabItemIndex(string Header)
         {
@@ -178,7 +187,7 @@ namespace ZNET_GUI
 
             if (ETH_Combox.SelectedIndex == 0)
             {
-                str = "ARP";
+                str = "XXX";
             }
             else if (ETH_Combox.SelectedIndex == 1)
             {
@@ -186,7 +195,7 @@ namespace ZNET_GUI
             }
             else if (ETH_Combox.SelectedIndex == 2)
             {
-                str = "XXX";
+                str = "ARP";
             }
             else
             {
@@ -223,6 +232,79 @@ namespace ZNET_GUI
         {
             ETH_Combox.SelectedIndex = 2;
             ETH_Combox.IsDropDownOpen = false;
+        }
+
+        private void BeginSelectInf_Click(object sender, RoutedEventArgs e)
+        {
+            Devices = LibPcapLiveDeviceList.Instance;
+
+            if (Devices.Count < 1)
+            {
+                Config_Message.Content = "No devices were found on this machine";
+                return;
+            }
+            List<string> ConfigComBoxItems = new List<string>();
+            int i = 0;
+            ConfigComBoxItems.Add("Select the interface here but me...");
+            foreach (var dev in Devices)
+            {
+                if (dev.Interface.Addresses.Count == 0)
+                {
+                    ConfigComBoxItems.Add(i.ToString() + ":");
+                }
+                else
+                {
+                    ConfigComBoxItems.Add(i.ToString() + ":" + dev.Interface.FriendlyName + "@" +dev.Interface.Addresses[1].Addr);
+                }
+                i++;
+            }
+            ConfigComBox.ItemsSource = ConfigComBoxItems;
+            ConfigComBox.SelectedIndex = 0;
+        }
+
+        private void ConfigComBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ConfigComBox.SelectedIndex <= 0) return;
+            Device = Devices[ConfigComBox.SelectedIndex - 1];
+            DeviceAddress = IPAddress.Parse(Device.Addresses[1].Addr.ToString());
+            string str = basic.MacStringSplit(Device.Addresses[2].Addr.hardwareAddress.ToString());
+            DeviceMAC = PhysicalAddress.Parse(str);
+        }
+
+        private void SetLocalIPMAC_Click(object sender, RoutedEventArgs e)
+        {
+            if((DeviceMAC != null) &&(DeviceAddress != null))
+            {
+                ETH_LocalMAC.Text = SenderMAC.Text = basic.MacStringSplit(DeviceMAC.ToString());
+                SenderIP.Text = DeviceAddress.ToString();
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("you should select one interface first and try again");
+            }
+        }
+
+        private void ETH_GotoSender_Click(object sender, RoutedEventArgs e)
+        {
+            if(ETH_PacketShow.Text != "")
+            {
+                SenderDataShow.Text = ETH_PacketShow.Text;
+                MainTable.SelectedIndex = GetTabItemIndex("Sender");
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("No Data...");
+            }
+        }
+
+        private void CHK_FromText_Checked(object sender, RoutedEventArgs e)
+        {
+            CHK_FromFile.IsChecked = false;
+        }
+
+        private void CHK_FromFile_Checked(object sender, RoutedEventArgs e)
+        {
+            CHK_FromText.IsChecked = false;
         }
     }
 }

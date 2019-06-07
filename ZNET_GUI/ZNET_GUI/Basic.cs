@@ -8,6 +8,16 @@ namespace ZNET_GUI
 {
     class Basic
     {
+        public string MacStringSplit(string MacStringNoSplit)
+        {
+            string str1 = "";
+            for (int i = 0; i < MacStringNoSplit.Length; i++)
+            {
+                str1 += MacStringNoSplit[i].ToString();
+                if ((i % 2 == 1) && (i < MacStringNoSplit.Length - 1)) str1 += "-";
+            }
+            return str1;
+        }
         public string byteToHexStr(byte[] bytes)
         {
             string returnStr = "";
