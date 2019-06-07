@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZNET_GUI", "ZNET_GUI\ZNET_GUI.csproj", "{8315D6BB-289A-4F3F-B015-DF0D9EFB5907}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8315D6BB-289A-4F3F-B015-DF0D9EFB5907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8315D6BB-289A-4F3F-B015-DF0D9EFB5907}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8315D6BB-289A-4F3F-B015-DF0D9EFB5907}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8315D6BB-289A-4F3F-B015-DF0D9EFB5907}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B54357E2-827E-4C76-A00C-913FEAD6CA59}
+	EndGlobalSection
+EndGlobal
