@@ -37,6 +37,8 @@ namespace ZNET_GUI
 
         GeneratePackets GenPackets = new GeneratePackets();
         Basic basic = new Basic();
+        SendNetPackets sendNetPackets = new SendNetPackets();
+
         private string LastPcapFilePath = "c:\\";
         private LibPcapLiveDeviceList Devices;
         private LibPcapLiveDevice Device;
@@ -187,7 +189,7 @@ namespace ZNET_GUI
 
             if (ETH_Combox.SelectedIndex == 0)
             {
-                str = "XXX";
+                str = "ARP";
             }
             else if (ETH_Combox.SelectedIndex == 1)
             {
@@ -195,7 +197,7 @@ namespace ZNET_GUI
             }
             else if (ETH_Combox.SelectedIndex == 2)
             {
-                str = "ARP";
+                str = "XXX";
             }
             else
             {
@@ -305,6 +307,42 @@ namespace ZNET_GUI
         private void CHK_FromFile_Checked(object sender, RoutedEventArgs e)
         {
             CHK_FromText.IsChecked = false;
+        }
+
+        private void SendOut_Click(object sender, RoutedEventArgs e)
+        {
+            if(CHK_FromText.IsChecked == true)
+            {
+                sendNetPackets.SendPacketFromDataBox(Device, basic.HexStrToBytes(SenderDataShow.Text), SendTimingEn.IsChecked,int.Parse(SendPeriod.Text));
+            }
+            if (CHK_FromFile.IsChecked == true)
+            {
+                sendNetPackets.SendPacketsFromFile(Device, PacketsFileName.Text, SendTimingEn.IsChecked, int.Parse(SendPeriod.Text));
+            }
+        }
+
+        private void OpenFileToSend_Click(object sender, RoutedEventArgs e)
+        {
+            using (System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                openFileDialog.Filter = "pcap files (*.pcap)|*.pcap|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    PacketsFileName.Text = openFileDialog.FileName;
+                    LastPcapFilePath = openFileDialog.FileName;
+                }
+                else
+                {
+                    PacketsFileName.Text = "";
+                }
+            }
+        }
+
+        private void StopSend_Click(object sender, RoutedEventArgs e)
+        {
+            sendNetPackets.StopSend();
         }
     }
 }

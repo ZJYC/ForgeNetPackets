@@ -8,6 +8,12 @@ namespace ZNET_GUI
 {
     class Basic
     {
+
+        public void MessageBox(string Inf)
+        {
+            System.Windows.Forms.MessageBox.Show(Inf);
+        }
+
         public string MacStringSplit(string MacStringNoSplit)
         {
             string str1 = "";
@@ -33,6 +39,8 @@ namespace ZNET_GUI
         }
         public byte[] HexStrToBytes(string hexStr)
         {
+            hexStr = hexStr.Replace(" ","");
+
             if (string.IsNullOrEmpty(hexStr))
             {
                 return new byte[0];

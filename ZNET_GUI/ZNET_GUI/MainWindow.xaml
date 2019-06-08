@@ -211,7 +211,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <TextBox x:Name="ETH_RemoteMAC" HorizontalAlignment="Left" Height="32" Margin="575,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Text="07-08-09-0A-0B-0C">
+                    <TextBox x:Name="ETH_RemoteMAC" HorizontalAlignment="Left" Height="32" Margin="575,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Text="FF-FF-FF-FF-FF-FF">
                         <TextBox.Foreground>
                             <SolidColorBrush Color="{DynamicResource Color2}"/>
                         </TextBox.Foreground>
@@ -448,7 +448,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <TextBox x:Name="TargetMAC" HorizontalAlignment="Left" Height="32" Margin="400,98,0,0" TextWrapping="Wrap" Text="00-00-00-00-00-00" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
+                    <TextBox x:Name="TargetMAC" HorizontalAlignment="Left" Height="32" Margin="400,98,0,0" TextWrapping="Wrap" Text="FF-FF-FF-FF-FF-FF" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2">
                         <TextBox.Foreground>
                             <SolidColorBrush Color="{DynamicResource Color2}"/>
                         </TextBox.Foreground>
@@ -511,7 +511,7 @@
                 <Grid HorizontalAlignment="Left" Height="305" VerticalAlignment="Top" Width="776" Margin="0,0,-3,-4">
                     <GroupBox Header="Send..." HorizontalAlignment="Left" Height="256" Margin="10,39,0,0" VerticalAlignment="Top" Width="160">
                         <Grid HorizontalAlignment="Left" Height="227" VerticalAlignment="Top" Width="150" Margin="0,0,-2,-1">
-                            <Button Content="SEND OUT!!" HorizontalAlignment="Left" Height="49" Margin="10,168,0,0" VerticalAlignment="Top" Width="130" Focusable="False">
+                            <Button x:Name="SendOut" Content="SEND OUT!!" HorizontalAlignment="Left" Height="30" Margin="11,153,0,0" VerticalAlignment="Top" Width="130" Focusable="False" Click="SendOut_Click">
                                 <Button.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Golden}"/>
                                 </Button.Foreground>
@@ -524,7 +524,7 @@
                                     </LinearGradientBrush>
                                 </Button.Background>
                             </Button>
-                            <CheckBox x:Name="CHK_FromFile" Content="From File" HorizontalAlignment="Left" Height="35" Margin="10,128,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromFile_Checked">
+                            <CheckBox x:Name="CHK_FromFile" Content="From File" HorizontalAlignment="Left" Height="25" Margin="10,123,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromFile_Checked">
                                 <CheckBox.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Golden}"/>
                                 </CheckBox.Foreground>
@@ -532,7 +532,7 @@
                                     <SolidColorBrush Color="{DynamicResource ColorNormal}"/>
                                 </CheckBox.Background>
                             </CheckBox>
-                            <CheckBox x:Name="CHK_FromText" Content="From Text" HorizontalAlignment="Left" Height="35" Margin="10,93,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromText_Checked">
+                            <CheckBox x:Name="CHK_FromText" Content="From Text" HorizontalAlignment="Left" Height="25" Margin="10,93,0,0" VerticalAlignment="Top" Width="130" Checked="CHK_FromText_Checked">
                                 <CheckBox.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Golden}"/>
                                 </CheckBox.Foreground>
@@ -551,7 +551,7 @@
                                     </LinearGradientBrush>
                                 </Label.Background>
                             </Label>
-                            <TextBox HorizontalAlignment="Left" Height="33" Margin="11,50,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="90">
+                            <TextBox x:Name="SendPeriod" HorizontalAlignment="Left" Height="33" Margin="11,50,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="90">
                                 <TextBox.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Golden}"/>
                                 </TextBox.Foreground>
@@ -562,7 +562,7 @@
                                     </LinearGradientBrush>
                                 </TextBox.Background>
                             </TextBox>
-                            <CheckBox Content="Timing" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="129">
+                            <CheckBox x:Name="SendTimingEn" Content="Timing" HorizontalAlignment="Left" Height="33" Margin="11,10,0,0" VerticalAlignment="Top" Width="129">
                                 <CheckBox.Foreground>
                                     <SolidColorBrush Color="#FF08F908"/>
                                 </CheckBox.Foreground>
@@ -573,6 +573,19 @@
                                     </LinearGradientBrush>
                                 </CheckBox.Background>
                             </CheckBox>
+                            <Button x:Name="StopSend" Content="STOP!!" HorizontalAlignment="Left" Height="30" Margin="11,188,0,0" VerticalAlignment="Top" Width="130" Focusable="False" Click="StopSend_Click">
+                                <Button.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
+                                </Button.Foreground>
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                        <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="Black"/>
+                                        <GradientStop Color="#FFFF0404" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
                         </Grid>
                     </GroupBox>
                     <Label Content="Data came from file or the following TextBox" HorizontalAlignment="Left" Height="39" Margin="10,6,0,0" VerticalAlignment="Top" Width="756">
@@ -588,18 +601,7 @@
                     </Label>
                     <GroupBox Header="File..." HorizontalAlignment="Left" Height="79" Margin="191,216,0,0" VerticalAlignment="Top" Width="575">
                         <Grid HorizontalAlignment="Left" Height="55" Margin="0,-5,-2,-1" VerticalAlignment="Top" Width="565">
-                            <Label Content="Open pcap file here..." HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" VerticalAlignment="Top" Width="268">
-                                <Label.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
-                                </Label.Foreground>
-                                <Label.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="Black" Offset="0"/>
-                                        <GradientStop Color="#FF0D023E" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Label.Background>
-                            </Label>
-                            <Button Content="Open file..." HorizontalAlignment="Left" Height="35" Margin="278,10,0,0" VerticalAlignment="Top" Width="150">
+                            <Button x:Name="OpenFileToSend" Content="..." HorizontalAlignment="Left" Height="35" Margin="10,9,0,0" VerticalAlignment="Top" Width="63" Click="OpenFileToSend_Click">
                                 <Button.Foreground>
                                     <SolidColorBrush Color="{DynamicResource Green}"/>
                                 </Button.Foreground>
@@ -612,17 +614,17 @@
                                     </LinearGradientBrush>
                                 </Button.Background>
                             </Button>
-                            <Label Content="File OK!!" HorizontalAlignment="Left" Height="35" Margin="453,11,0,0" VerticalAlignment="Top" Width="112">
-                                <Label.Foreground>
-                                    <SolidColorBrush Color="{DynamicResource Golden}"/>
-                                </Label.Foreground>
-                                <Label.Background>
+                            <TextBox x:Name="PacketsFileName" HorizontalAlignment="Left" Height="34" Margin="78,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="477">
+                                <TextBox.Foreground>
+                                    <SolidColorBrush Color="{DynamicResource Green}"/>
+                                </TextBox.Foreground>
+                                <TextBox.Background>
                                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                         <GradientStop Color="Black" Offset="0"/>
-                                        <GradientStop Color="#FF0D023E" Offset="1"/>
+                                        <GradientStop Color="{DynamicResource ColorNormal}" Offset="1"/>
                                     </LinearGradientBrush>
-                                </Label.Background>
-                            </Label>
+                                </TextBox.Background>
+                            </TextBox>
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="Data..." HorizontalAlignment="Left" Height="172" Margin="191,39,0,0" VerticalAlignment="Top" Width="575">
