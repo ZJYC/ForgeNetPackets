@@ -68,5 +68,24 @@ namespace ZNET_GUI
 
             return result;
         }
+
+        public UInt16 CheckSum(byte[] buff)
+        {
+            UInt32 Sum = 0;UInt16 ChkSum = 0;
+            List<byte> ListTemp = new List<byte>(buff);
+            if (ListTemp.Count % 2 == 1) ListTemp.Add(0x00);
+            for(int i = 0;i < ListTemp.Count;i += 2)
+            {
+                Sum += (UInt32)(ListTemp[i] * 256 + ListTemp[i + 1]);
+            }
+            while((Sum & 0xFFFF0000) != 0)
+            {
+                Sum += (Sum >> 16);
+            }
+            ChkSum = (UInt16)Sum;
+            ChkSum = (UInt16)(~ChkSum);
+            return ChkSum;
+        }
+
     }
 }

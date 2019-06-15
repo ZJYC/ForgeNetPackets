@@ -344,5 +344,139 @@ namespace ZNET_GUI
         {
             sendNetPackets.StopSend();
         }
+
+        private void Table_IP_Initialized(object sender, EventArgs e)
+        {
+            List<string> IpUpProtocolComBox = new List<string> { "TCP","UDP" };
+            IP_UPProtocol.ItemsSource = IpUpProtocolComBox;
+        }
+
+        private void IP_AutoFill_Click(object sender, RoutedEventArgs e)
+        {
+            #region 如果没有填充，则会自动填充
+            if (IP_Version.Text == "") IP_Version.Text = "4";
+            if(IP_HeaderLen.Text == "")
+            {
+                ;
+            }
+            if (IP_ServiceType.Text == "") IP_ServiceType.Text = "0";
+            if(IP_TotolLen.Text == "")
+            {
+                ;
+            }
+            if (IP_SN.Text == "") IP_SN.Text = "1234";
+            if (IP_Shift.Text == "") IP_Shift.Text = "0";
+            if (IP_TTL.Text == "") IP_TTL.Text = "64";
+            if (IP_UPProtocol.SelectedIndex == -1) IP_UPProtocol.SelectedIndex = 0;
+            if (IP_Chksum.Text == "")
+            {
+                ;
+            }
+            if (IP_OptionOrPad.Text == "") IP_OptionOrPad.Text = "";
+            #endregion
+
+            #region 部分字段需要计算
+            IP_Packet iP_Packet = new IP_Packet();
+            iP_Packet.Version = byte.Parse(IP_Version.Text);
+            iP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
+            iP_Packet.SN = UInt16.Parse(IP_SN.Text);
+            iP_Packet.DF = IP_DF.IsChecked;
+            iP_Packet.MF = IP_MF.IsChecked;
+            iP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
+            iP_Packet.TTL = byte.Parse(IP_TTL.Text);
+            UInt16 Value = 0;
+            iP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
+            iP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
+            iP_Packet.SourceIP = IP_SourceIP.Text;
+            iP_Packet.DstIP = IP_DstIP.Text;
+            iP_Packet.OptionPad = IP_OptionOrPad.Text;
+            iP_Packet.Data = IP_Data.Text;
+            iP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
+            iP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
+            iP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
+            IP_PacketShow.Text = basic.byteToHexStr(iP_Packet.GenPacket());
+            #endregion
+
+            #region 将计算结果显示回来
+            //byte Version { get; set; }
+            //byte HeaderLen { get; set; }
+            //byte ServiceID { get; set; }
+            //UInt16 TotolLen { get; set; }
+            //UInt16 SN { get; set; }
+            //bool DF { get; set; }
+            //bool MF { get; set; }
+            //UInt16 Shift { get; set; }
+            //byte TTL { get; set; }
+            //byte Protocol { get; set; }
+            //UInt16 Chksum { get; set; }
+            //string SourceIP { get; set; }
+            //string DstIP { get; set; }
+            //string OptionPad { get; set; }
+            //string Data { get; set; }
+            IP_HeaderLen.Text = iP_Packet.HeaderLen.ToString();
+            IP_TotolLen.Text = iP_Packet.TotolLen.ToString();
+            IP_Chksum.Text = string.Format("{0:X}", iP_Packet.Chksum);
+            #endregion
+        }
+
+        private void ARP_GenReq_Copy1_Click(object sender, RoutedEventArgs e)
+        {
+            #region 如果没有填充，则会自动填充
+            if (IP_Version.Text == "") IP_Version.Text = "4";
+            if (IP_HeaderLen.Text == "")
+            {
+                ;
+            }
+            if (IP_ServiceType.Text == "") IP_ServiceType.Text = "0";
+            if (IP_TotolLen.Text == "")
+            {
+                ;
+            }
+            if (IP_SN.Text == "") IP_SN.Text = "1234";
+            if (IP_Shift.Text == "") IP_Shift.Text = "0";
+            if (IP_TTL.Text == "") IP_TTL.Text = "64";
+            if (IP_UPProtocol.SelectedIndex == -1) IP_UPProtocol.SelectedIndex = 0;
+            if (IP_Chksum.Text == "")
+            {
+                ;
+            }
+            if (IP_OptionOrPad.Text == "") IP_OptionOrPad.Text = "";
+            #endregion
+
+            #region 部分字段需要计算
+            IP_Packet iP_Packet = new IP_Packet();
+            iP_Packet.Version = byte.Parse(IP_Version.Text);
+            iP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
+            iP_Packet.SN = UInt16.Parse(IP_SN.Text);
+            iP_Packet.DF = IP_DF.IsChecked;
+            iP_Packet.MF = IP_MF.IsChecked;
+            iP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
+            iP_Packet.TTL = byte.Parse(IP_TTL.Text);
+            UInt16 Value = 0;
+            iP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
+            iP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
+            iP_Packet.SourceIP = IP_SourceIP.Text;
+            iP_Packet.DstIP = IP_DstIP.Text;
+            iP_Packet.OptionPad = IP_OptionOrPad.Text;
+            iP_Packet.Data = IP_Data.Text;
+            iP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
+            iP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
+            iP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
+            IP_PacketShow.Text = basic.byteToHexStr(iP_Packet.GenPacket());
+            #endregion
+
+            #region 将计算结果显示回来
+            IP_HeaderLen.Text = iP_Packet.HeaderLen.ToString();
+            IP_TotolLen.Text = iP_Packet.TotolLen.ToString();
+            IP_Chksum.Text = string.Format("{0:X}", iP_Packet.Chksum);
+            #endregion
+        }
+
+        private void IP_ClearAuto_Click(object sender, RoutedEventArgs e)
+        {
+            IP_HeaderLen.Text = "0";
+            IP_TotolLen.Text = "0";
+            IP_Chksum.Text = "0";
+        }
     }
 }
