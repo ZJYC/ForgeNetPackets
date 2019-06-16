@@ -35,11 +35,12 @@ namespace ZNET_GUI
             InitializeComponent();
         }
 
-        GeneratePackets GenPackets = new GeneratePackets();
         Basic basic = new Basic();
         SendNetPackets sendNetPackets = new SendNetPackets();
+        Z_ETH_Packet z_ETH_Packet = new Z_ETH_Packet();
+        Z_ARP_Packet z_ARP_Packet = new Z_ARP_Packet();
+        ZJ_IP_Packet zJ_IP_Packet = new ZJ_IP_Packet();
 
-        private string LastPcapFilePath = "c:\\";
         private LibPcapLiveDeviceList Devices;
         private LibPcapLiveDevice Device;
 
@@ -81,7 +82,6 @@ namespace ZNET_GUI
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     FilePathShow.Text = openFileDialog.FileName;
-                    LastPcapFilePath = openFileDialog.FileName;
                 }
                 else
                 {
@@ -91,26 +91,14 @@ namespace ZNET_GUI
             
         }
 
-        private void ARP_GenReq_Click(object sender, RoutedEventArgs e)
-        {
-            ArpPacket ArpReqPacket = GenPackets.GetArpPacketFromGUI(
-                ArpOperation.Request,
-                TargetMAC.Text,
-                TargetIP.Text,
-                SenderMAC.Text,
-                SenderIP.Text);
-            ArpPacketBytesShow.Text = basic.byteToHexStr(ArpReqPacket.Bytes);
-        }
-
         private void ARP_GenRep_Click(object sender, RoutedEventArgs e)
         {
-            ArpPacket ArpReqPacket = GenPackets.GetArpPacketFromGUI(
-                ArpOperation.Response,
-                TargetMAC.Text,
-                TargetIP.Text,
-                SenderMAC.Text,
-                SenderIP.Text);
-            ArpPacketBytesShow.Text = basic.byteToHexStr(ArpReqPacket.Bytes);
+            z_ARP_Packet.LocalMAC = PhysicalAddress.Parse(SenderMAC.Text).GetAddressBytes();
+            z_ARP_Packet.LocalIP = IPAddress.Parse(SenderIP.Text).GetAddressBytes();
+            z_ARP_Packet.DstMAC = PhysicalAddress.Parse(SenderMAC.Text).GetAddressBytes();
+            z_ARP_Packet.DstIP = IPAddress.Parse(SenderIP.Text).GetAddressBytes();
+            z_ARP_Packet.Opt = (string)ARP_OptCombox.SelectedValue;
+            ArpPacketBytesShow.Text = basic.byteToHexStr(z_ARP_Packet.GenPacket());
         }
 
         private void GotoETH_Click(object sender, RoutedEventArgs e)
@@ -122,18 +110,16 @@ namespace ZNET_GUI
             }
             ETH_UplayerData.Text = ArpPacketBytesShow.Text;
             MainTable.SelectedIndex = GetTabItemIndex("ETH");
-            ETH_ComboxSet("ARP");
-            //Table_ETH.RaiseEvent(new RoutedEventArgs(TabItem.GotFocusEvent));
-
+            ETH_Combox.SelectedValue = "ARP";
         }
 
         private void ETH_Gen_Click(object sender, RoutedEventArgs e)
         {
-            EthernetPacket ethernetPacket = GenPackets.GetEthPacketFromGUI(ETH_ComboxGet(),ETH_LocalMAC.Text, ETH_RemoteMAC.Text);
-            string LoadStr = ETH_UplayerData.Text.Replace(" ","");
-            byte[] LoadBytes = basic.HexStrToBytes(LoadStr);
-            ethernetPacket.PayloadData = LoadBytes;
-            ETH_PacketShow.Text = basic.byteToHexStr(ethernetPacket.Bytes);
+            z_ETH_Packet.DstMAC = PhysicalAddress.Parse(ETH_RemoteMAC.Text).GetAddressBytes();
+            z_ETH_Packet.SourceMAC = PhysicalAddress.Parse(ETH_LocalMAC.Text).GetAddressBytes();
+            z_ETH_Packet.Type = (string)ETH_Combox.SelectedValue;
+            z_ETH_Packet.Data = basic.HexStrToBytes(ETH_UplayerData.Text);
+            ETH_PacketShow.Text = basic.byteToHexStr(z_ETH_Packet.GenPacket());
         }
 
         private void ETH_SaveToFile_Click(object sender, RoutedEventArgs e)
@@ -204,13 +190,6 @@ namespace ZNET_GUI
                 str = "";
             }
             return str;
-        }
-        public void ETH_ComboxSet(string str)
-        {
-            if(str == "ARP")
-            {
-                ETH_Combox.SelectedIndex = 0;
-            }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -331,7 +310,6 @@ namespace ZNET_GUI
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     PacketsFileName.Text = openFileDialog.FileName;
-                    LastPcapFilePath = openFileDialog.FileName;
                 }
                 else
                 {
@@ -349,74 +327,6 @@ namespace ZNET_GUI
         {
             List<string> IpUpProtocolComBox = new List<string> { "TCP","UDP" };
             IP_UPProtocol.ItemsSource = IpUpProtocolComBox;
-        }
-
-        private void IP_AutoFill_Click(object sender, RoutedEventArgs e)
-        {
-            #region 如果没有填充，则会自动填充
-            if (IP_Version.Text == "") IP_Version.Text = "4";
-            if(IP_HeaderLen.Text == "")
-            {
-                ;
-            }
-            if (IP_ServiceType.Text == "") IP_ServiceType.Text = "0";
-            if(IP_TotolLen.Text == "")
-            {
-                ;
-            }
-            if (IP_SN.Text == "") IP_SN.Text = "1234";
-            if (IP_Shift.Text == "") IP_Shift.Text = "0";
-            if (IP_TTL.Text == "") IP_TTL.Text = "64";
-            if (IP_UPProtocol.SelectedIndex == -1) IP_UPProtocol.SelectedIndex = 0;
-            if (IP_Chksum.Text == "")
-            {
-                ;
-            }
-            if (IP_OptionOrPad.Text == "") IP_OptionOrPad.Text = "";
-            #endregion
-
-            #region 部分字段需要计算
-            IP_Packet iP_Packet = new IP_Packet();
-            iP_Packet.Version = byte.Parse(IP_Version.Text);
-            iP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
-            iP_Packet.SN = UInt16.Parse(IP_SN.Text);
-            iP_Packet.DF = IP_DF.IsChecked;
-            iP_Packet.MF = IP_MF.IsChecked;
-            iP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
-            iP_Packet.TTL = byte.Parse(IP_TTL.Text);
-            UInt16 Value = 0;
-            iP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
-            iP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
-            iP_Packet.SourceIP = IP_SourceIP.Text;
-            iP_Packet.DstIP = IP_DstIP.Text;
-            iP_Packet.OptionPad = IP_OptionOrPad.Text;
-            iP_Packet.Data = IP_Data.Text;
-            iP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
-            iP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
-            iP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
-            IP_PacketShow.Text = basic.byteToHexStr(iP_Packet.GenPacket());
-            #endregion
-
-            #region 将计算结果显示回来
-            //byte Version { get; set; }
-            //byte HeaderLen { get; set; }
-            //byte ServiceID { get; set; }
-            //UInt16 TotolLen { get; set; }
-            //UInt16 SN { get; set; }
-            //bool DF { get; set; }
-            //bool MF { get; set; }
-            //UInt16 Shift { get; set; }
-            //byte TTL { get; set; }
-            //byte Protocol { get; set; }
-            //UInt16 Chksum { get; set; }
-            //string SourceIP { get; set; }
-            //string DstIP { get; set; }
-            //string OptionPad { get; set; }
-            //string Data { get; set; }
-            IP_HeaderLen.Text = iP_Packet.HeaderLen.ToString();
-            IP_TotolLen.Text = iP_Packet.TotolLen.ToString();
-            IP_Chksum.Text = string.Format("{0:X}", iP_Packet.Chksum);
-            #endregion
         }
 
         private void ARP_GenReq_Copy1_Click(object sender, RoutedEventArgs e)
@@ -444,31 +354,30 @@ namespace ZNET_GUI
             #endregion
 
             #region 部分字段需要计算
-            IP_Packet iP_Packet = new IP_Packet();
-            iP_Packet.Version = byte.Parse(IP_Version.Text);
-            iP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
-            iP_Packet.SN = UInt16.Parse(IP_SN.Text);
-            iP_Packet.DF = IP_DF.IsChecked;
-            iP_Packet.MF = IP_MF.IsChecked;
-            iP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
-            iP_Packet.TTL = byte.Parse(IP_TTL.Text);
+            zJ_IP_Packet.Version = byte.Parse(IP_Version.Text);
+            zJ_IP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
+            zJ_IP_Packet.SN = UInt16.Parse(IP_SN.Text);
+            zJ_IP_Packet.DF = IP_DF.IsChecked;
+            zJ_IP_Packet.MF = IP_MF.IsChecked;
+            zJ_IP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
+            zJ_IP_Packet.TTL = byte.Parse(IP_TTL.Text);
             UInt16 Value = 0;
-            iP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
-            iP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
-            iP_Packet.SourceIP = IP_SourceIP.Text;
-            iP_Packet.DstIP = IP_DstIP.Text;
-            iP_Packet.OptionPad = IP_OptionOrPad.Text;
-            iP_Packet.Data = IP_Data.Text;
-            iP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
-            iP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
-            iP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
-            IP_PacketShow.Text = basic.byteToHexStr(iP_Packet.GenPacket());
+            zJ_IP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
+            zJ_IP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
+            zJ_IP_Packet.SourceIP = IP_SourceIP.Text;
+            zJ_IP_Packet.DstIP = IP_DstIP.Text;
+            zJ_IP_Packet.OptionPad = IP_OptionOrPad.Text;
+            zJ_IP_Packet.Data = IP_Data.Text;
+            zJ_IP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
+            zJ_IP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
+            zJ_IP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
+            IP_PacketShow.Text = basic.byteToHexStr(zJ_IP_Packet.GenPacket());
             #endregion
 
             #region 将计算结果显示回来
-            IP_HeaderLen.Text = iP_Packet.HeaderLen.ToString();
-            IP_TotolLen.Text = iP_Packet.TotolLen.ToString();
-            IP_Chksum.Text = string.Format("{0:X}", iP_Packet.Chksum);
+            IP_HeaderLen.Text = zJ_IP_Packet.HeaderLen.ToString();
+            IP_TotolLen.Text = zJ_IP_Packet.TotolLen.ToString();
+            IP_Chksum.Text = string.Format("{0:X}", zJ_IP_Packet.Chksum);
             #endregion
         }
 
@@ -477,6 +386,30 @@ namespace ZNET_GUI
             IP_HeaderLen.Text = "0";
             IP_TotolLen.Text = "0";
             IP_Chksum.Text = "0";
+        }
+
+        private void Table_ETH_Initialized(object sender, EventArgs e)
+        {
+            List<string> ListETH_Combox = new List<string>() {"ARP","IP" };
+            ETH_Combox.ItemsSource = ListETH_Combox;
+        }
+
+        private void TabItem_Initialized(object sender, EventArgs e)
+        {
+            List<string> ComboxItemSource = new List<string>() { "Request", "Reply" };
+            ARP_OptCombox.ItemsSource = ComboxItemSource;
+        }
+
+        private void IP_GotoETH_Click(object sender, RoutedEventArgs e)
+        {
+            if(IP_PacketShow.Text == "")
+            {
+                System.Windows.Forms.MessageBox.Show("No Data...");
+                return;
+            }
+            ETH_Combox.SelectedValue = "IP";
+            ETH_UplayerData.Text = IP_PacketShow.Text;
+            MainTable.SelectedIndex = GetTabItemIndex("ETH");
         }
     }
 }

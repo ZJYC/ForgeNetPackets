@@ -13,7 +13,91 @@ using System.Net.NetworkInformation;
 namespace ZNET_GUI
 {
 
-    class IP_Packet
+    class Z_TCP_Packet
+    {
+        public string SrcPort;
+        public string DstPort;
+        public string SnNum;
+        public string AcNum;
+        public string HeaderLen;
+        public string Resv;
+        public bool? CWR;
+        public bool? ECE;
+        public bool? URG;
+        public bool? ACK;
+        public bool? PSH;
+        public bool? RST;
+        public bool? SYN;
+        public bool? FIN;
+        public string WinSize;
+        public string ChkSum;
+        public string UrgPointer;
+        public string Option;
+        public string Data;
+
+        public byte[] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.SrcPort))));
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.DstPort))));
+            Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.SnNum))));
+            Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.AcNum))));
+
+        }
+    }
+
+    class Z_ARP_Packet
+    {
+        public UInt16 H_Type = 0x0001;
+        public UInt16 P_Type = 0x0800;
+        public byte H_Len = 0x06;
+        public byte P_Len = 0x04;
+        public string Opt;
+        public byte[] LocalMAC = new byte[6];
+        public byte[] LocalIP = new byte[4];
+        public byte[] DstMAC = new byte[6];
+        public byte[] DstIP = new byte[4];
+        public Dictionary<string, UInt16> ARP_OptDic = new Dictionary<string, ushort>() { { "Request", 0x0001 }, { "Reply", 0x0002 }, };
+
+        public byte[] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)this.H_Type)));
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)this.P_Type)));
+            Temp.Add(H_Len);
+            Temp.Add(P_Len);
+            UInt16 Opt;
+            ARP_OptDic.TryGetValue(this.Opt, out Opt);
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)Opt)));
+            Temp.AddRange(LocalMAC);
+            Temp.AddRange(LocalIP);
+            Temp.AddRange(DstMAC);
+            Temp.AddRange(DstIP);
+            return Temp.ToArray();
+        }
+    }
+
+    class Z_ETH_Packet
+    {
+        public byte[] DstMAC = new byte[6];
+        public byte[] SourceMAC = new byte[6];
+        public string Type;
+        public byte[] Data = new byte[0];
+        public Dictionary<string, UInt16> ProtocolDic = new Dictionary<string, ushort>() { {"ARP",0x0806 },{"IP",0x0800 }, };
+        public byte[] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+            Temp.AddRange(this.DstMAC);
+            Temp.AddRange(this.SourceMAC);
+            UInt16 Type;
+            ProtocolDic.TryGetValue(this.Type, out Type);
+            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)Type)));
+            Temp.AddRange(this.Data);
+            return Temp.ToArray();
+        }
+    }
+
+    class ZJ_IP_Packet
     {
         public byte Version { get; set; }
         public byte HeaderLen { get; set; }
@@ -64,8 +148,8 @@ namespace ZNET_GUI
                 this.Chksum = Crc;
                 Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)Crc)));
             }
-            Frm.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder((Int32)IPAddress.Parse(SourceIP).Address)));
-            Frm.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder((Int32)IPAddress.Parse(DstIP).Address)));
+            Frm.AddRange(IPAddress.Parse(SourceIP).GetAddressBytes());
+            Frm.AddRange(IPAddress.Parse(DstIP).GetAddressBytes());
             Frm.AddRange(basic.HexStrToBytes(this.OptionPad));
             Frm.AddRange(basic.HexStrToBytes(this.Data));
             return Frm.ToArray();
