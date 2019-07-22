@@ -95,8 +95,8 @@ namespace ZNET_GUI
         {
             z_ARP_Packet.LocalMAC = PhysicalAddress.Parse(SenderMAC.Text).GetAddressBytes();
             z_ARP_Packet.LocalIP = IPAddress.Parse(SenderIP.Text).GetAddressBytes();
-            z_ARP_Packet.DstMAC = PhysicalAddress.Parse(SenderMAC.Text).GetAddressBytes();
-            z_ARP_Packet.DstIP = IPAddress.Parse(SenderIP.Text).GetAddressBytes();
+            z_ARP_Packet.DstMAC = PhysicalAddress.Parse(TargetMAC.Text).GetAddressBytes();
+            z_ARP_Packet.DstIP = IPAddress.Parse(TargetIP.Text).GetAddressBytes();
             z_ARP_Packet.Opt = (string)ARP_OptCombox.SelectedValue;
             ArpPacketBytesShow.Text = basic.byteToHexStr(z_ARP_Packet.GenPacket());
         }

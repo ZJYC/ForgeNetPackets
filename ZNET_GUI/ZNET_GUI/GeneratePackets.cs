@@ -35,15 +35,15 @@ namespace ZNET_GUI
         public string Option;
         public string Data;
 
-        public byte[] GenPacket()
-        {
-            List<byte> Temp = new List<byte>();
-            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.SrcPort))));
-            Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.DstPort))));
-            Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.SnNum))));
-            Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.AcNum))));
-
-        }
+        //public byte[] GenPacket()
+        //{
+        //    List<byte> Temp = new List<byte>();
+        //    Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.SrcPort))));
+        //    Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.DstPort))));
+        //    Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.SnNum))));
+        //    Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.AcNum))));
+        //    return 
+        //}
     }
 
     class Z_ARP_Packet
