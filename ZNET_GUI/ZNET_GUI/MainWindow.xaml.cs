@@ -39,7 +39,7 @@ namespace ZNET_GUI
         SendNetPackets sendNetPackets = new SendNetPackets();
         Z_ETH_Packet z_ETH_Packet = new Z_ETH_Packet();
         Z_ARP_Packet z_ARP_Packet = new Z_ARP_Packet();
-        ZJ_IP_Packet zJ_IP_Packet = new ZJ_IP_Packet();
+        
 
         private LibPcapLiveDeviceList Devices;
         private LibPcapLiveDevice Device;
@@ -331,61 +331,40 @@ namespace ZNET_GUI
 
         private void ARP_GenReq_Copy1_Click(object sender, RoutedEventArgs e)
         {
-            #region 如果没有填充，则会自动填充
-            if (IP_Version.Text == "") IP_Version.Text = "4";
-            if (IP_HeaderLen.Text == "")
+            //检查数据
+            try
             {
-                ;
+                UInt16.Parse(IP_SN.Text);
+                if(UInt16.Parse(IP_Shift.Text) % 8 != 0)
+                {
+                    UInt16.Parse("");
+                }
+                byte.Parse(IP_TTL.Text);
+                IPAddress.Parse(IP_DstIP.Text);
+                IPAddress.Parse(IP_SourceIP.Text);
+                if (basic.RemoveSpace(IP_OptionOrPad.Text).Length % 8 != 0) UInt16.Parse("");
+                if (basic.RemoveSpace(IP_Data.Text).Length % 2 != 0) UInt16.Parse("");
             }
-            if (IP_ServiceType.Text == "") IP_ServiceType.Text = "0";
-            if (IP_TotolLen.Text == "")
+            catch
             {
-                ;
+                System.Windows.MessageBox.Show("参数不对");
+                return;
             }
-            if (IP_SN.Text == "") IP_SN.Text = "1234";
-            if (IP_Shift.Text == "") IP_Shift.Text = "0";
-            if (IP_TTL.Text == "") IP_TTL.Text = "64";
-            if (IP_UPProtocol.SelectedIndex == -1) IP_UPProtocol.SelectedIndex = 0;
-            if (IP_Chksum.Text == "")
-            {
-                ;
-            }
-            if (IP_OptionOrPad.Text == "") IP_OptionOrPad.Text = "";
-            #endregion
 
-            #region 部分字段需要计算
-            zJ_IP_Packet.Version = byte.Parse(IP_Version.Text);
-            zJ_IP_Packet.ServiceID = byte.Parse(IP_ServiceType.Text);
-            zJ_IP_Packet.SN = UInt16.Parse(IP_SN.Text);
-            zJ_IP_Packet.DF = IP_DF.IsChecked;
-            zJ_IP_Packet.MF = IP_MF.IsChecked;
-            zJ_IP_Packet.Shift = UInt16.Parse(IP_Shift.Text);
-            zJ_IP_Packet.TTL = byte.Parse(IP_TTL.Text);
-            UInt16 Value = 0;
-            zJ_IP_Packet.ProtocolDic.TryGetValue((string)IP_UPProtocol.SelectedValue, out Value);
-            zJ_IP_Packet.Protocol = (byte)Value;//iP_Packet.ProtocolDic(IP_UPProtocol.);
-            zJ_IP_Packet.SourceIP = IP_SourceIP.Text;
-            zJ_IP_Packet.DstIP = IP_DstIP.Text;
-            zJ_IP_Packet.OptionPad = IP_OptionOrPad.Text;
-            zJ_IP_Packet.Data = IP_Data.Text;
-            zJ_IP_Packet.HeaderLen = byte.Parse(IP_HeaderLen.Text);
-            zJ_IP_Packet.TotolLen = UInt16.Parse(IP_TotolLen.Text);
-            zJ_IP_Packet.Chksum = Convert.ToUInt16(IP_Chksum.Text,16);
-            IP_PacketShow.Text = basic.byteToHexStr(zJ_IP_Packet.GenPacket());
-            #endregion
+            JX_IP_Packet jX_IP_Packet = new JX_IP_Packet();
+            jX_IP_Packet.ID = IP_SN.Text;
+            jX_IP_Packet.DF = IP_DF.IsChecked;
+            jX_IP_Packet.MF = IP_MF.IsChecked;
+            jX_IP_Packet.Shift = IP_Shift.Text;
+            jX_IP_Packet.DstIP = IP_DstIP.Text;
+            jX_IP_Packet.SrcIP = IP_SourceIP.Text;
+            jX_IP_Packet.TTL = IP_TTL.Text;
+            jX_IP_Packet.Protocol = (string)IP_UPProtocol.SelectedValue;
+            jX_IP_Packet.Option = IP_OptionOrPad.Text;
+            jX_IP_Packet.Data = IP_Data.Text;
 
-            #region 将计算结果显示回来
-            IP_HeaderLen.Text = zJ_IP_Packet.HeaderLen.ToString();
-            IP_TotolLen.Text = zJ_IP_Packet.TotolLen.ToString();
-            IP_Chksum.Text = string.Format("{0:X}", zJ_IP_Packet.Chksum);
-            #endregion
-        }
+            IP_PacketShow.Text = basic.byteToHexStr(jX_IP_Packet.GenPacket());
 
-        private void IP_ClearAuto_Click(object sender, RoutedEventArgs e)
-        {
-            IP_HeaderLen.Text = "0";
-            IP_TotolLen.Text = "0";
-            IP_Chksum.Text = "0";
         }
 
         private void Table_ETH_Initialized(object sender, EventArgs e)
@@ -410,6 +389,104 @@ namespace ZNET_GUI
             ETH_Combox.SelectedValue = "IP";
             ETH_UplayerData.Text = IP_PacketShow.Text;
             MainTable.SelectedIndex = GetTabItemIndex("ETH");
+        }
+
+        private void TCP_GenPacket_Click(object sender, RoutedEventArgs e)
+        {
+            /* 检查数据 */
+            try
+            {
+                UInt16 Temp16 = 0;
+                UInt32 Temp32 = 0;
+                Temp16 = UInt16.Parse(TCP_SourcePort.Text);
+                Temp16 = UInt16.Parse(TCP_DstPort.Text);
+                Temp16 = UInt16.Parse(TCP_WinSize.Text);
+                Temp16 = UInt16.Parse(TCP_UrgPointer.Text);
+                Temp32 = UInt32.Parse(TCP_SNNum.Text);
+                Temp32 = UInt32.Parse(TCP_ACKNum.Text);
+                if(TCP_DataInput.Text != "")
+                {
+                    byte[] TempArray1 = basic.HexStrToBytes(TCP_DataInput.Text);
+                }
+                if (TCP_OptionInput.Text != "")
+                {
+                    byte[] TempArray2 = basic.HexStrToBytes(TCP_OptionInput.Text);
+                }
+                if (basic.RemoveSpace(TCP_DataInput.Text).Length % 2 != 0 || basic.RemoveSpace(TCP_OptionInput.Text).Length % 8 != 0)
+                {
+                    System.Windows.MessageBox.Show("数据或选项字段长度非法");
+                    return;
+                }
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("输入数据非法");
+                return;
+            }
+            Z_TCP_Packet z_TCP_Packet = new Z_TCP_Packet();
+            z_TCP_Packet.Data = TCP_DataInput.Text;
+            z_TCP_Packet.Option = TCP_OptionInput.Text;
+            z_TCP_Packet.SrcPort = TCP_SourcePort.Text;
+            z_TCP_Packet.DstPort = TCP_DstPort.Text;
+            z_TCP_Packet.SnNum = TCP_SNNum.Text;
+            z_TCP_Packet.AcNum = TCP_ACKNum.Text;
+            z_TCP_Packet.WinSize = TCP_WinSize.Text;
+            z_TCP_Packet.UrgPointer = TCP_UrgPointer.Text;
+            z_TCP_Packet.CWR = TCP_F_CWR.IsChecked;
+            z_TCP_Packet.ECE = TCP_F_ECE.IsChecked;
+            z_TCP_Packet.URG = TCP_F_URG.IsChecked;
+            z_TCP_Packet.ACK = TCP_F_ACK.IsChecked;
+            z_TCP_Packet.PSH = TCP_F_PSH.IsChecked;
+            z_TCP_Packet.RST = TCP_F_RST.IsChecked;
+            z_TCP_Packet.SYN = TCP_F_SYN.IsChecked;
+            z_TCP_Packet.FIN = TCP_F_FIN.IsChecked;
+            TCP_Packet.Text = basic.byteToHexStr(z_TCP_Packet.GenPacket());
+
+        }
+
+        private void TCP_SendToIP_Click(object sender, RoutedEventArgs e)
+        {
+            if(TCP_Packet.Text == "")
+            {
+                System.Windows.MessageBox.Show("没有数据啊");
+                return;
+            }
+            IP_UPProtocol.SelectedValue = "TCP";
+            IP_Data.Text = TCP_Packet.Text;
+            MainTable.SelectedIndex = GetTabItemIndex("IP");
+        }
+
+        private void GenUDPPacket_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ushort.Parse(UDP_SrcPort.Text);
+                ushort.Parse(UDP_DstPort.Text);
+                if (basic.RemoveSpace(UDP_Data.Text).Length % 2 == 1) int.Parse("");
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("数据输入不对");
+                return;
+            }
+            Z_UDP_Packet z_UDP_Packet = new Z_UDP_Packet();
+            z_UDP_Packet.Data = UDP_Data.Text;
+            z_UDP_Packet.DstPort = UDP_DstPort.Text;
+            z_UDP_Packet.SrcPort = UDP_SrcPort.Text;
+
+            UDP_Packet.Text = basic.byteToHexStr(z_UDP_Packet.GenPacket());
+        }
+
+        private void UDPGotoIPLayer_Click(object sender, RoutedEventArgs e)
+        {
+            if (UDP_Packet.Text == "")
+            {
+                System.Windows.MessageBox.Show("没有数据啊");
+                return;
+            }
+            IP_UPProtocol.SelectedValue = "UDP";
+            IP_Data.Text = UDP_Packet.Text;
+            MainTable.SelectedIndex = GetTabItemIndex("IP");
         }
     }
 }

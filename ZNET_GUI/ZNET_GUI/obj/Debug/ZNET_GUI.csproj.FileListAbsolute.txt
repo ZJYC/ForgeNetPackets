@@ -214,7 +214,6 @@ C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\bin\De
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\bin\Debug\System.Xml.XPath.XDocument.dll
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\bin\Debug\PacketDotNet.dll
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\bin\Debug\SharpPcap.dll
-C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.csprojAssemblyReference.cache
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.exe.config
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\MainWindow.g.cs
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\App.g.cs
@@ -228,3 +227,4 @@ C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\De
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.csproj.CopyComplete
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.exe
 C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.pdb
+C:\Users\Administrator\Documents\GitHub\ForgeNetPackets\ZNET_GUI\ZNET_GUI\obj\Debug\ZNET_GUI.csprojAssemblyReference.cache

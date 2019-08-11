@@ -12,38 +12,89 @@ using System.Net.NetworkInformation;
 
 namespace ZNET_GUI
 {
+    class Z_UDP_Packet
+    {
+        public string SrcPort = "0";
+        public string DstPort = "0";
+        public string Data = "00";
+
+        Basic basic = new Basic();
+
+        public byte [] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(SrcPort))));
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(DstPort))));
+            short Len = (short)(8 + basic.RemoveSpace(Data).Length / 2);
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(Len)));
+            Temp.Add(0);
+            Temp.Add(0);
+            Temp.AddRange(basic.HexStrToBytes(Data));
+            return Temp.ToArray();
+
+        }
+    }
 
     class Z_TCP_Packet
     {
-        public string SrcPort;
-        public string DstPort;
-        public string SnNum;
-        public string AcNum;
-        public string HeaderLen;
-        public string Resv;
-        public bool? CWR;
-        public bool? ECE;
-        public bool? URG;
-        public bool? ACK;
-        public bool? PSH;
-        public bool? RST;
-        public bool? SYN;
-        public bool? FIN;
-        public string WinSize;
-        public string ChkSum;
-        public string UrgPointer;
-        public string Option;
-        public string Data;
+        public string SrcPort = "0";
+        public string DstPort = "0";
+        public string SnNum = "0";
+        public string AcNum = "0";
+        public string HeaderLen = "0";
+        public string Resv = "0";
+        public bool? CWR = false;
+        public bool? ECE = false;
+        public bool? URG = false;
+        public bool? ACK = false;
+        public bool? PSH = false;
+        public bool? RST = false;
+        public bool? SYN = false;
+        public bool? FIN = false;
+        public string WinSize = "0";
+        public string ChkSum = "0";
+        public string UrgPointer = "0";
+        /* 长度必须是4的倍数 */
+        public string Option = "00";
+        public string Data = "00";
 
-        //public byte[] GenPacket()
-        //{
-        //    List<byte> Temp = new List<byte>();
-        //    Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.SrcPort))));
-        //    Temp.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder(Int16.Parse(this.DstPort))));
-        //    Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.SnNum))));
-        //    Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.AcNum))));
-        //    return 
-        //}
+        Basic basic = new Basic();
+
+        public byte[] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+            try
+            {
+                byte Bits = 0;
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(this.SrcPort))));
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(this.DstPort))));
+                Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.SnNum))));
+                Temp.AddRange(BitConverter.GetBytes((UInt32)IPAddress.HostToNetworkOrder(Int32.Parse(this.AcNum))));
+                this.HeaderLen = (((20 + basic.RemoveSpace(this.Option).Length / 2) / 4) << 4).ToString();
+                Temp.Add((byte)(byte.Parse(this.HeaderLen) + byte.Parse(this.Resv)));
+                if (CWR == true) Bits |= (1 << 7);
+                if (ECE == true) Bits |= (1 << 6);
+                if (URG == true) Bits |= (1 << 5);
+                if (ACK == true) Bits |= (1 << 4);
+                if (PSH == true) Bits |= (1 << 3);
+                if (RST == true) Bits |= (1 << 2);
+                if (SYN == true) Bits |= (1 << 1);
+                if (FIN == true) Bits |= (1 << 0);
+                Temp.Add(Bits);
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(this.WinSize))));
+                /*CRC */
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse("0"))));
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(this.UrgPointer))));
+                Temp.AddRange(basic.HexStrToBytes(this.Option));
+                Temp.AddRange(basic.HexStrToBytes(this.Data));
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("当生成TCP数据包的时候发生未知错误");
+            }
+            return Temp.ToArray();
+        }
     }
 
     class Z_ARP_Packet
@@ -97,63 +148,88 @@ namespace ZNET_GUI
         }
     }
 
-    class ZJ_IP_Packet
+    class JX_IP_Packet
     {
-        public byte Version { get; set; }
-        public byte HeaderLen { get; set; }
-        public byte ServiceID { get; set; }
-        public UInt16 TotolLen { get; set; }
-        public UInt16 SN { get; set; }
-        public bool? DF { get; set; }
-        public bool? MF { get; set; }
-        public UInt16 Shift { get; set; }
-        public byte TTL { get; set; }
-        public byte Protocol { get; set; }
-        public UInt16 Chksum { get; set; }
-        public string SourceIP { get; set; }
-        public string DstIP { get; set;}
-        public string OptionPad { get; set; }
-        public string Data { get; set; }
+        public string ID = "0";
+        public bool? MF = false;
+        public bool? DF = false;
+        public string Shift = "0";
+        public string TTL = "64";
+        public string Protocol = "TCP";
+        public string CheckSum = "0";
+        public string SrcIP = "0.0.0.0";
+        public string DstIP = "0.0.0.0";
+        public string Option = "";
+        public string Data = "";
 
-        public Dictionary<string, UInt16> ProtocolDic = new Dictionary<string, ushort>() { {"TCP",6 },{ "UDP",17},{ "ICMP",1} };
+        public Dictionary<string, byte> ProtocolDic = new Dictionary<string, byte>() {
+            { "TCP", 6 },
+            { "UDP", 17 },
+            { "ICMP", 1 } };
 
-        public byte[] GenPacket()
+        Basic basic = new Basic();
+
+        public byte [] GenPacket()
         {
-            Basic basic = new Basic();
-            List<byte> Frm = new List<byte>();
-            //如果长度为0则会自行计算
-            if (this.HeaderLen == 0)
+            List<byte> Temp = new List<byte>();
+            byte VersionHeaderLen = (byte)((4 << 4) | ((20 + basic.RemoveSpace(Option).Length / 2) / 4));
+            Temp.Add(VersionHeaderLen);
+            Temp.Add(0);
+            short TotalLen = (short)((20 + basic.RemoveSpace(Option).Length / 2) + basic.RemoveSpace(Data).Length / 2);
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder((short)TotalLen)));
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(ID))));
+            short ShiftFlg = 0;
+            if (MF == true) ShiftFlg |= (1 << 13);
+            if (DF == true) ShiftFlg |= (1 << 14);
+            ShiftFlg |= short.Parse(Shift);
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder((short)ShiftFlg)));
+            Temp.Add(byte.Parse(TTL));
+            Temp.Add((byte)ProtocolDic[Protocol]);
+            Temp.Add(0);
+            Temp.Add(0);
+            Temp.AddRange(IPAddress.Parse(SrcIP).GetAddressBytes());
+            Temp.AddRange(IPAddress.Parse(DstIP).GetAddressBytes());
+            if (Option != "") Temp.AddRange(basic.HexStrToBytes(Option));
+            UInt16 CHK = basic.CheckSum(Temp.ToArray());
+            List<byte> Res = new List<byte>();
+            Res.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder((short)CHK)));
+            Temp[10] = Res[0];
+            Temp[11] = Res[1];
+            if (Data != "") Temp.AddRange(basic.HexStrToBytes(Data));
+            if(Protocol == "TCP")
             {
-                this.HeaderLen = (byte)(this.OptionPad.Length / 2 + 20);
+                byte[] Pseudo = GenPseudo();
+                short Chksum = (short)basic.CheckSumEx(Pseudo, basic.HexStrToBytes(Data));
+                List<byte> T = new List<byte>();
+                T.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(Chksum)));
+                Temp[(20 + Option.Length / 2) + 16] = T[0];
+                Temp[(20 + Option.Length / 2) + 17] = T[1];
             }
-            if (this.TotolLen == 0)
+            if(Protocol == "UDP")
             {
-                this.TotolLen = (UInt16)(this.HeaderLen + this.Data.Length / 2);
+                byte[] Pseudo = GenPseudo();
+                short Chksum = (short)basic.CheckSumEx(Pseudo, basic.HexStrToBytes(Data));
+                List<byte> T = new List<byte>();
+                T.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(Chksum)));
+                Temp[(20 + Option.Length / 2) + 6] = T[0];
+                Temp[(20 + Option.Length / 2) + 7] = T[1];
             }
-            //如果CRC不为空，就不计算
-            Frm.Add((byte)((this.Version << 4) | (this.HeaderLen /4)));
-            Frm.Add(this.ServiceID);
-            Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)this.TotolLen)));
-            Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)this.SN)));
-            UInt16 Temp = (UInt16)((((this.DF == true ? 1 : 0) * 128) + ((this.MF == true ? 1 : 0) * 128))*256 + this.Shift);
-            Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)Temp)));
-            Frm.Add(this.TTL);
-            Frm.Add(this.Protocol);
-            Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)this.Chksum)));
-            if (this.Chksum == 0)
-            {
-                UInt16 Crc = basic.CheckSum(Frm.ToArray());
-                Frm.RemoveAt(Frm.Count - 1);
-                Frm.RemoveAt(Frm.Count - 1);
-                this.Chksum = Crc;
-                Frm.AddRange(BitConverter.GetBytes((UInt16)IPAddress.HostToNetworkOrder((Int16)Crc)));
-            }
-            Frm.AddRange(IPAddress.Parse(SourceIP).GetAddressBytes());
-            Frm.AddRange(IPAddress.Parse(DstIP).GetAddressBytes());
-            Frm.AddRange(basic.HexStrToBytes(this.OptionPad));
-            Frm.AddRange(basic.HexStrToBytes(this.Data));
-            return Frm.ToArray();
+            return Temp.ToArray();
         }
+
+        private byte [] GenPseudo()
+        {
+            List<byte> Temp = new List<byte>();
+
+            Temp.AddRange(IPAddress.Parse(SrcIP).GetAddressBytes());
+            Temp.AddRange(IPAddress.Parse(DstIP).GetAddressBytes());
+            Temp.Add(0);
+            Temp.Add((byte)ProtocolDic[Protocol]);
+            Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder((short)(basic.RemoveSpace(Data).Length / 2))));
+            return Temp.ToArray();
+        }
+
+        //private short 
 
     }
 

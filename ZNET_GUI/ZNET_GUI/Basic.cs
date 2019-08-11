@@ -69,6 +69,38 @@ namespace ZNET_GUI
             return result;
         }
 
+        public string RemoveSpace(string Input)
+        {
+            return Input.Replace(" ","");
+        }
+
+        public UInt16 CheckSumEx(byte[] buff1, byte[] buff2)
+        {
+            UInt32 Chksum = 0;
+            UInt16 Res = 0;
+
+            List<byte> Buff1_ = new List<byte>(buff1);
+            if (Buff1_.Count % 2 == 1) Buff1_.Add(0);
+            List<byte> Buff2_ = new List<byte>(buff2);
+            if (Buff2_.Count % 2 == 1) Buff2_.Add(0);
+
+            for(int i = 0;i < Buff1_.Count;i += 2)
+            {
+                Chksum += (UInt32)(Buff1_[i] * 256 + Buff1_[i + 1]);
+            }
+            for (int i = 0; i < Buff2_.Count; i += 2)
+            {
+                Chksum += (UInt32)(Buff2_[i] * 256 + Buff2_[i + 1]);
+            }
+            while ((Chksum & 0xFFFF0000) != 0)
+            {
+                Chksum = (Chksum >> 16) + (Chksum & 0xFFFF);
+            }
+            Res = (UInt16)Chksum;
+            Res = (UInt16)(~Res);
+            return Res;
+        }
+
         public UInt16 CheckSum(byte[] buff)
         {
             UInt32 Sum = 0;UInt16 ChkSum = 0;
@@ -80,7 +112,7 @@ namespace ZNET_GUI
             }
             while((Sum & 0xFFFF0000) != 0)
             {
-                Sum += (Sum >> 16);
+                Sum = (Sum >> 16) + (Sum & 0xFFFF);
             }
             ChkSum = (UInt16)Sum;
             ChkSum = (UInt16)(~ChkSum);

@@ -37,18 +37,33 @@ namespace ZNET_GUI
             Device.Open();
             SendingThreadEnable = true;
 
+            List<RawCapture> rawCaptures = new List<RawCapture>();
+
+            try
+            {
+                RawCapture packet;
+                ICaptureDevice PacketsFile = OpenPacketsFile(Path);
+                while ((packet = PacketsFile.GetNextPacket()) != null)
+                {
+                    rawCaptures.Add(packet);
+                }
+            }
+            catch (Exception e)
+            {
+                basic.MessageBox(e.Message);
+            }
+
             Thread td = new Thread(() =>
             {
                 while (true)
                 {
                     if (SendingThreadEnable == false) break;
+                    
                     try
                     {
-                        RawCapture packet;
-                        ICaptureDevice PacketsFile = OpenPacketsFile(Path);
-                        while ((packet = PacketsFile.GetNextPacket()) != null)
+                        for(int i = 0;i < rawCaptures.Count;i ++)
                         {
-                            Device.SendPacket(packet.Data);
+                            Device.SendPacket(rawCaptures[i].Data);
                         }
                     }
                     catch (Exception e)
