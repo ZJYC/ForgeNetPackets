@@ -35,7 +35,6 @@ namespace ZNET_GUI
 
         }
     }
-
     class Z_TCP_Packet
     {
         public string SrcPort = "0";
@@ -96,7 +95,6 @@ namespace ZNET_GUI
             return Temp.ToArray();
         }
     }
-
     class Z_ARP_Packet
     {
         public UInt16 H_Type = 0x0001;
@@ -127,7 +125,6 @@ namespace ZNET_GUI
             return Temp.ToArray();
         }
     }
-
     class Z_ETH_Packet
     {
         public byte[] DstMAC = new byte[6];
@@ -147,7 +144,6 @@ namespace ZNET_GUI
             return Temp.ToArray();
         }
     }
-
     class JX_IP_Packet
     {
         public string ID = "0";
@@ -232,7 +228,6 @@ namespace ZNET_GUI
         //private short 
 
     }
-
     class GeneratePackets
     {
         public ArpPacket GetArpPacketFromGUI(ArpOperation arpOperation,string RemoteMAC,string RemoteIP,string LocalMAC,string LocalIP)
@@ -260,5 +255,58 @@ namespace ZNET_GUI
                 PhysicalAddress.Parse(RemoteMAC), ethernetType);
             return ethernet;
         }
+    }
+    class Z_DHCP_Packet
+    {
+        public string op = string.Empty;
+        public string htype = string.Empty;
+        public string hlen = string.Empty;
+        public string hops = string.Empty;
+        public string xid = string.Empty;
+        public string secs = string.Empty;
+        public string flags = string.Empty;
+        public string ciaddr = string.Empty;
+        public string yiaddr = string.Empty;
+        public string siaddr = string.Empty;
+        public string giaddr = string.Empty;
+        public string chaddr = string.Empty;
+        public string sname = string.Empty;
+        public string file = string.Empty;
+        public string options = string.Empty;
+
+        //Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(op))));
+
+        Basic basic = new Basic();
+
+        public byte[] GenPacket()
+        {
+            List<byte> Temp = new List<byte>();
+
+            try
+            {
+                Temp.Add(byte.Parse(op));
+                Temp.Add(byte.Parse(htype));
+                Temp.Add(byte.Parse(hlen));
+                Temp.Add(byte.Parse(hops));
+                Temp.AddRange(BitConverter.GetBytes((int)IPAddress.HostToNetworkOrder(int.Parse(xid))));
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(secs))));
+                Temp.AddRange(BitConverter.GetBytes((short)IPAddress.HostToNetworkOrder(short.Parse(flags))));
+                Temp.AddRange(BitConverter.GetBytes((int)IPAddress.HostToNetworkOrder(int.Parse(ciaddr))));
+                Temp.AddRange(BitConverter.GetBytes((int)IPAddress.HostToNetworkOrder(int.Parse(yiaddr))));
+                Temp.AddRange(BitConverter.GetBytes((int)IPAddress.HostToNetworkOrder(int.Parse(siaddr))));
+                Temp.AddRange(BitConverter.GetBytes((int)IPAddress.HostToNetworkOrder(int.Parse(giaddr))));
+                Temp.AddRange(basic.HexStrToBytes(chaddr, 16));
+                Temp.AddRange(basic.HexStrToBytes(sname, 64));
+                Temp.AddRange(basic.HexStrToBytes(file, 128));
+                Temp.AddRange(basic.HexStrToBytes(options));
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("当生成DHCP数据包的时候发生未知错误");
+            }
+
+            return Temp.ToArray();
+        }
+
     }
 }

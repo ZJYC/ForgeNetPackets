@@ -13,7 +13,6 @@ namespace ZNET_GUI
         {
             System.Windows.Forms.MessageBox.Show(Inf);
         }
-
         public string MacStringSplit(string MacStringNoSplit)
         {
             string str1 = "";
@@ -68,12 +67,22 @@ namespace ZNET_GUI
 
             return result;
         }
+        public byte[] HexStrToBytes(string hexStr,int Len)
+        {
+            List<byte> Temp = new List<byte>(HexStrToBytes(hexStr));
 
+            for(int i = 0;i < Len - Temp.Count;i++)
+            {
+                Temp.Add(0x00);
+            }
+
+            return Temp.ToArray();
+
+        }
         public string RemoveSpace(string Input)
         {
             return Input.Replace(" ","");
         }
-
         public UInt16 CheckSumEx(byte[] buff1, byte[] buff2)
         {
             UInt32 Chksum = 0;
@@ -100,7 +109,6 @@ namespace ZNET_GUI
             Res = (UInt16)(~Res);
             return Res;
         }
-
         public UInt16 CheckSum(byte[] buff)
         {
             UInt32 Sum = 0;UInt16 ChkSum = 0;
@@ -118,6 +126,5 @@ namespace ZNET_GUI
             ChkSum = (UInt16)(~ChkSum);
             return ChkSum;
         }
-
     }
 }
